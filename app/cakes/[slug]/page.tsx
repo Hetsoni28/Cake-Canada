@@ -4,20 +4,28 @@ import { ProductDetailClient } from "@/components/product-detail-client";
 import { getProductBySlug } from "@/lib/products";
 import { getAddons, getOptionPrices } from "@/lib/addons";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
-  return { title: product?.name ?? 'Cake Not Found' };
+  return { title: product?.name ?? "Cake Not Found" };
 }
 
-export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const [product, addons, optionPrices] = await Promise.all([
     getProductBySlug(slug),
     getAddons(),
-    getOptionPrices()
+    getOptionPrices(),
   ]);
 
   if (!product) {
@@ -56,10 +64,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </div>
 
       <div className="shell">
-        <ProductDetailClient 
-          product={product} 
-          addons={addons} 
-          optionPrices={optionPrices} 
+        <ProductDetailClient
+          product={product}
+          addons={addons}
+          optionPrices={optionPrices}
         />
       </div>
 
