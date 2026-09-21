@@ -10,6 +10,7 @@ import {
   LogOut,
   Loader2,
   CheckCircle,
+  Heart,
 } from "lucide-react";
 import { createBrowserClient } from "@supabase/ssr";
 
@@ -26,6 +27,12 @@ const SIDEBAR_LINKS = [
     href: "/account/orders",
     icon: Package,
     label: "Order History",
+    active: false,
+  },
+  {
+    href: "/account/wishlist",
+    icon: Heart,
+    label: "My Wishlist",
     active: false,
   },
   {

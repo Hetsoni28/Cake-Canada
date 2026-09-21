@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Heart, Loader2, Clock, CheckCircle, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCart } from "@/components/cart-provider";
+import { useWishlist } from "@/components/wishlist-provider";
 import type { Product } from "@/lib/products";
 import type { ProductAddon, ProductOptionPrice } from "@/lib/addons";
 
@@ -94,8 +95,9 @@ export function ProductDetailClient({ product, addons, optionPrices }: ProductDe
   const [cakeMessage, setCakeMessage]   = useState("");
   const [showPreview, setShowPreview]   = useState(false);
 
-  /* Wishlist */
-  const [wishlisted, setWishlisted]     = useState(false);
+  /* Wishlist — wired to Supabase via WishlistProvider */
+  const { isWishlisted, toggle: toggleWishlist } = useWishlist();
+  const wishlisted = isWishlisted(product.id);
 
   /* Pricing */
   const [isVerifying, setIsVerifying]   = useState(false);
@@ -487,7 +489,7 @@ export function ProductDetailClient({ product, addons, optionPrices }: ProductDe
           <button
             className={`btn btn-outline wishlist-btn-icon${wishlisted ? " wishlisted" : ""}`}
             aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-            onClick={() => setWishlisted(v => !v)}
+            onClick={() => toggleWishlist(product.id)}
           >
             <Heart size={20} fill={wishlisted ? "currentColor" : "none"} />
           </button>

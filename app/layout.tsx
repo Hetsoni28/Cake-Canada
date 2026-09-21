@@ -3,6 +3,7 @@ import "./globals.css";
 import { CartProvider } from "@/components/cart-provider";
 import { CartDrawer } from "@/components/cart-drawer";
 import { ToastProvider } from "@/components/ui/toast";
+import { WishlistProvider } from "@/components/wishlist-provider";
 
 export const metadata: Metadata = {
   title: {
@@ -34,10 +35,12 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ToastProvider>
-          <CartProvider>
-            {children}
-            <CartDrawer />
-          </CartProvider>
+          <WishlistProvider>
+            <CartProvider>
+              {children}
+              <CartDrawer />
+            </CartProvider>
+          </WishlistProvider>
         </ToastProvider>
       </body>
     </html>
