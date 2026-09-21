@@ -449,17 +449,21 @@ h2 {
 
 .custom-banner {
   background: var(--cream);
-  display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
+  display: flex;
+  align-items: stretch;
   min-height: 500px;
   overflow: hidden;
+  border-radius: var(--radius-lg);
+  gap: 0;
 }
-.custom-banner > div {
+.custom-banner > div,
+.custom-banner-copy {
   padding: 70px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
+  flex: 1;
 }
 .custom-banner h2 {
   font-size: clamp(45px, 5vw, 70px);
@@ -2883,4 +2887,311 @@ footer.mt-80 { margin-top: 80px; }
 /* ── Categories page helpers ───────────────────────────────── */
 .categories-container { padding-bottom: 80px; }
 
+/* ═══════════════════════════════════════════════════════════
+   PHASE 2 — HOMEPAGE UPGRADES
+   ═══════════════════════════════════════════════════════════ */
 
+/* ── General homepage wrapper ─────────────────────────────── */
+.homepage { overflow-x: hidden; }
+
+/* ── Hero float tag ───────────────────────────────────────── */
+.hero-float-tag {
+  position: absolute;
+  bottom: 32px;
+  left: 24px;
+  background: var(--ivory);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  padding: 10px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--espresso);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+.hero-float-star { color: var(--caramel); }
+
+/* ── Occasion grid ────────────────────────────────────────── */
+.occasion-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+.occasion-card {
+  display: block;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  text-decoration: none;
+  color: inherit;
+}
+.occasion-img-wrap {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.5s ease;
+}
+.occasion-card:hover .occasion-img-wrap { transform: scale(1.06); }
+.occasion-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.occasion-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(41,35,31,0.72) 0%, transparent 55%);
+}
+.occasion-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  padding: 16px 14px 14px;
+}
+.occasion-label h3 {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.occasion-label span {
+  font-size: 11px;
+  color: rgba(255,255,255,0.75);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Feature icon ─────────────────────────────────────────── */
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--blush);
+  color: var(--chocolate);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+/* ── Step upgrade ─────────────────────────────────────────── */
+.step-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--cream);
+  border: 2px solid var(--border);
+  color: var(--chocolate);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.step-num {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--caramel);
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ── Promo upgrade ─────────────────────────────────────────── */
+.promo-img-wrap {
+  width: 340px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 280px;
+}
+.promo-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.promo-btn { margin-top: 24px; }
+
+/* ── Review cards upgrade ─────────────────────────────────── */
+.review-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 28px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.review-stars {
+  color: var(--caramel);
+  font-size: 16px;
+  margin: 0;
+  letter-spacing: 2px;
+}
+.review-quote {
+  color: var(--espresso);
+  font-size: 15px;
+  line-height: 1.7;
+  font-style: italic;
+  flex: 1;
+}
+.review-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-style: normal;
+}
+.review-footer strong { font-size: 13px; font-weight: 700; }
+.review-footer small  { font-size: 12px; color: var(--taupe); }
+
+/* ── Gallery upgrade ──────────────────────────────────────── */
+.gallery { display: grid; grid-template-columns: repeat(6,1fr); gap: 10px; }
+.gallery-item {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  aspect-ratio: 1;
+}
+.gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.45s ease;
+}
+.gallery-item:hover img { transform: scale(1.07); }
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(41,35,31,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.gallery-item:hover .gallery-overlay { opacity: 1; }
+.gallery-ig-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Newsletter upgrade ───────────────────────────────────── */
+.newsletter-form-wrap { width: 100%; max-width: 460px; }
+.newsletter-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.newsletter-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+}
+.newsletter-input::placeholder { color: rgba(255,255,255,0.6); }
+.newsletter-input:focus { border-color: rgba(255,255,255,0.65); }
+.newsletter-btn {
+  background: #fff !important;
+  color: var(--chocolate) !important;
+  border-color: #fff !important;
+  white-space: nowrap;
+}
+.newsletter-btn:hover {
+  background: var(--ivory) !important;
+}
+.newsletter-note {
+  margin: 10px 0 0;
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+}
+
+/* ── Footer social ────────────────────────────────────────── */
+.footer-social {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+.footer-social a {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.7);
+  transition: all 0.2s;
+}
+.footer-social a:hover {
+  border-color: rgba(255,255,255,0.6);
+  color: #fff;
+}
+
+/* ── Custom banner upgrade ────────────────────────────────── */
+.custom-banner-copy { flex: 1; }
+.custom-banner-img {
+  width: 380px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 340px;
+}
+.custom-banner-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Product card skeleton ────────────────────────────────── */
+.product-card-skeleton {
+  background: linear-gradient(90deg, var(--cream) 25%, var(--blush) 50%, var(--cream) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 12px;
+  aspect-ratio: 3/4;
+}
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .occasion-grid { grid-template-columns: repeat(3, 1fr); }
+  .gallery { grid-template-columns: repeat(3, 1fr); }
+  .gallery-item:nth-child(1) { grid-column: span 1; grid-row: span 1; aspect-ratio: 1; }
+  .promo-img-wrap { display: none; }
+  .custom-banner-img { display: none; }
+}
+@media (max-width: 768px) {
+  .occasion-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .review-card { padding: 24px 20px; }
+  .newsletter-form-wrap { max-width: 100%; }
+}
+@media (max-width: 480px) {
+  .occasion-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .gallery { grid-template-columns: 1fr 1fr; }
+}
