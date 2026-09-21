@@ -1,122 +1,65 @@
-import { ArrowRight, MapPin } from "lucide-react";
-import { Navbar } from "@/components/navbar";
 import { getCategoryBySlug } from "@/lib/categories";
 import { getProductsByCategory } from "@/lib/products";
 import { ProductCard } from "@/components/product-card";
+import { notFound } from "next/navigation";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const cat = await getCategoryBySlug(slug);
-  return { title: cat?.name ?? "Category" };
+  const category = await getCategoryBySlug(slug);
+  return { title: category?.name ?? 'Category Not Found' };
 }
 
-export default async function CategoryPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);
 
   if (!category) {
-    return (
-      <main className="min-h-screen bg-ivory text-espresso">
-        <div className="announcement">
-          Freshly baked · Local delivery · Custom cakes available
-        </div>
-        <Navbar />
-        <section className="page-hero">
-          <div className="shell">
-            <h1>Collection not found.</h1>
-            <p>
-              The category you&apos;re looking for doesn&apos;t exist.{" "}
-              <a href="/categories">View all collections →</a>
-            </p>
-          </div>
-        </section>
-      </main>
-    );
+    notFound();
   }
 
   const products = await getProductsByCategory(slug);
 
   return (
-    <main className="min-h-screen bg-ivory text-espresso">
-      <div className="announcement">
-        Freshly baked · Local delivery · Custom cakes available
-      </div>
-      <Navbar />
+    <div className="category-detail-page">
+      <div className="announcement-bar">Free delivery on orders over $100</div>
+      <nav className="navbar">
+        <a href="/" className="logo">Cake Canada</a>
+        <div className="nav-links">
+          <a href="/cakes">All Cakes</a>
+          <a href="/categories">Categories</a>
+        </div>
+      </nav>
 
-      <section className="page-hero">
-        <div className="shell">
-          <p className="eyebrow" style={{ justifyContent: "center" }}>
-            COLLECTION
-          </p>
+      <header className="page-hero" style={{ backgroundImage: `url(${category.image_url})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="hero-overlay" style={{ backgroundColor: 'rgba(0,0,0,0.5)', padding: '4rem 2rem', color: 'white', textAlign: 'center' }}>
           <h1>{category.name}</h1>
           <p>{category.description}</p>
         </div>
-      </section>
+      </header>
 
-      <section className="section shell">
-        <div className="section-heading split">
-          <h2>
-            {category.name} cakes.
-          </h2>
-          <a className="text-link" href="/cakes">
-            View all cakes <ArrowRight size={16} />
-          </a>
-        </div>
-
-        {products.length > 0 ? (
-          <div className="product-grid">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+      <main className="shell">
+        <div className="catalogue-content" style={{ marginTop: '2rem' }}>
+          <div className="results-info">
+            Showing {products.length} cakes in {category.name}
           </div>
-        ) : (
-          <p style={{ color: "var(--taupe)", fontSize: "15px" }}>
-            No cakes in this category yet.
-          </p>
-        )}
-      </section>
+          
+          {products.length === 0 ? (
+            <div className="empty-state">No cakes found in this category.</div>
+          ) : (
+            <div className="catalogue-grid">
+              {products.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
 
       <footer className="footer">
-        <div className="shell footer-grid">
-          <div>
-            <div className="brand">
-              MAISON<span>CAKE CO.</span>
-            </div>
-            <p>Handcrafted cakes made for life's sweetest moments.</p>
-          </div>
-          <div>
-            <h4>Shop</h4>
-            <a href="/cakes">All Cakes</a>
-            <a href="/categories/birthday">Birthday</a>
-            <a href="/custom-cake">Custom Cakes</a>
-          </div>
-          <div>
-            <h4>Company</h4>
-            <a href="/about">About Us</a>
-            <a href="/contact">Contact</a>
-            <a href="/faq">FAQs</a>
-          </div>
-          <div>
-            <h4>Contact</h4>
-            <p>
-              <MapPin size={15} /> Canada
-            </p>
-            <p>hello@maisoncakeco.ca</p>
-          </div>
-        </div>
-        <div className="shell footer-bottom">
-          <span>© 2026 Maison Cake Co.</span>
-          <span>Privacy · Terms</span>
-        </div>
+        <p>&copy; 2026 Cake Canada. All rights reserved.</p>
       </footer>
-    </main>
+    </div>
   );
 }

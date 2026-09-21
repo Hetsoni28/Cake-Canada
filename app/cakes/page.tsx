@@ -1,124 +1,118 @@
-import type { Metadata } from "next";
-import { MapPin } from "lucide-react";
-import { Navbar } from "@/components/navbar";
-import { ProductCard } from "@/components/product-card";
 import { getProducts } from "@/lib/products";
-import { getCategories } from "@/lib/categories";
+import { getCategories as fetchCategories } from "@/lib/categories";
+import { ProductCard } from "@/components/product-card";
 
-export const metadata: Metadata = {
-  title: "All Cakes",
-};
+export const dynamic = 'force-dynamic';
 
 export default async function CakesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string }>;
+  searchParams: Promise<{ q?: string; category?: string; sort?: string; page?: string }>
 }) {
-  const { category } = await searchParams;
+  const params = await searchParams;
+  const page = params.page ? parseInt(params.page, 10) : 1;
+  const result = await getProducts({
+    search: params.q,
+    category: params.category,
+    sort: params.sort as any,
+    page,
+    limit: 12
+  });
 
-  const [allProducts, categories] = await Promise.all([
-    getProducts(),
-    getCategories(),
-  ]);
-
-  const products = category
-    ? allProducts.filter((p) => p.category_slug === category)
-    : allProducts;
+  const categories = await fetchCategories();
 
   return (
-    <main className="min-h-screen bg-ivory text-espresso">
-      {/* Announcement bar */}
-      <div className="announcement">
-        Freshly baked · Local delivery · Custom cakes available
-      </div>
-
-      <Navbar />
-
-      {/* Page hero */}
-      <section className="page-hero">
-        <p className="eyebrow">OUR COLLECTION</p>
+    <div className="catalogue-page">
+      <div className="announcement-bar">Free delivery on orders over $100</div>
+      <nav className="navbar">
+        <a href="/" className="logo">Cake Canada</a>
+        <div className="nav-links">
+          <a href="/cakes">All Cakes</a>
+          <a href="/categories">Categories</a>
+        </div>
+      </nav>
+      
+      <header className="page-hero">
         <h1>Every cake, a work of art.</h1>
-        <p className="page-hero-subtitle">
-          Browse our full collection of handcrafted cakes — made fresh for
-          birthdays, anniversaries, weddings, and every sweet occasion in
-          between.
-        </p>
-      </section>
+      </header>
 
-      {/* Catalogue */}
-      <div className="shell">
+      <main className="shell">
+        <form className="search-bar" action="/cakes" method="GET">
+          <input type="text" name="q" placeholder="Search cakes..." defaultValue={params.q} />
+          {params.category && <input type="hidden" name="category" value={params.category} />}
+          {params.sort && <input type="hidden" name="sort" value={params.sort} />}
+          <button type="submit">Search</button>
+        </form>
+
         <div className="catalogue-layout">
-          {/* Sidebar filters */}
           <aside className="catalogue-filters">
-            <h3>Filter by</h3>
-            <ul className="filter-list">
-              <li>
-                <a href="/cakes" className={!category ? "active" : ""}>
-                  All Cakes
-                </a>
-              </li>
-              {categories.map((cat) => (
-                <li key={cat.id}>
-                  <a
-                    href={`/cakes?category=${cat.slug}`}
-                    className={category === cat.slug ? "active" : ""}
-                  >
-                    {cat.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <h3>Filters</h3>
+            <div className="filter-group">
+              <h4>Categories</h4>
+              <ul className="category-list">
+                <li><a href="/cakes" className={!params.category ? 'active' : ''}>All</a></li>
+                {categories.map(cat => (
+                  <li key={cat.id}>
+                    <a href={`/cakes?category=${cat.slug}${params.sort ? `&sort=${params.sort}` : ''}`} className={params.category === cat.slug ? 'active' : ''}>
+                      {cat.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div className="filter-group">
+              <h4>Sort By</h4>
+              <ul className="sort-list">
+                <li><a href={`/cakes?${params.category ? `category=${params.category}&` : ''}sort=newest`}>Newest</a></li>
+                <li><a href={`/cakes?${params.category ? `category=${params.category}&` : ''}sort=price_asc`}>Price: Low to High</a></li>
+                <li><a href={`/cakes?${params.category ? `category=${params.category}&` : ''}sort=price_desc`}>Price: High to Low</a></li>
+                <li><a href={`/cakes?${params.category ? `category=${params.category}&` : ''}sort=name_asc`}>Name: A to Z</a></li>
+              </ul>
+            </div>
           </aside>
 
-          {/* Product grid */}
-          <div className="catalogue-grid">
-            {products.length > 0 ? (
-              products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))
+          <div className="catalogue-content">
+            <div className="results-info">
+              Showing {result.products.length} of {result.total} cakes
+            </div>
+            
+            {result.products.length === 0 ? (
+              <div className="empty-state">No cakes found. Try adjusting your filters.</div>
             ) : (
-              <p className="catalogue-empty">
-                No cakes found in this category. Try another filter.
-              </p>
+              <>
+                <div className="catalogue-grid">
+                  {result.products.map(product => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+                
+                {result.totalPages > 1 && (
+                  <div className="pagination">
+                    {page > 1 && (
+                      <a href={`/cakes?page=${page - 1}${params.category ? `&category=${params.category}` : ''}${params.sort ? `&sort=${params.sort}` : ''}${params.q ? `&q=${params.q}` : ''}`}>Prev</a>
+                    )}
+                    
+                    {Array.from({ length: result.totalPages }).map((_, i) => (
+                      <a key={i} href={`/cakes?page=${i + 1}${params.category ? `&category=${params.category}` : ''}${params.sort ? `&sort=${params.sort}` : ''}${params.q ? `&q=${params.q}` : ''}`} className={page === i + 1 ? 'active' : ''}>
+                        {i + 1}
+                      </a>
+                    ))}
+                    
+                    {page < result.totalPages && (
+                      <a href={`/cakes?page=${page + 1}${params.category ? `&category=${params.category}` : ''}${params.sort ? `&sort=${params.sort}` : ''}${params.q ? `&q=${params.q}` : ''}`}>Next</a>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
-      </div>
+      </main>
 
-      {/* Footer */}
       <footer className="footer">
-        <div className="shell footer-grid">
-          <div>
-            <div className="brand">
-              MAISON<span>CAKE CO.</span>
-            </div>
-            <p>Handcrafted cakes made for life's sweetest moments.</p>
-          </div>
-          <div>
-            <h4>Shop</h4>
-            <a href="/cakes">All Cakes</a>
-            <a href="/categories/birthday">Birthday</a>
-            <a href="/custom-cake">Custom Cakes</a>
-          </div>
-          <div>
-            <h4>Company</h4>
-            <a href="/about">About Us</a>
-            <a href="/contact">Contact</a>
-            <a href="/faq">FAQs</a>
-          </div>
-          <div>
-            <h4>Contact</h4>
-            <p>
-              <MapPin size={15} /> Canada
-            </p>
-            <p>hello@maisoncakeco.ca</p>
-          </div>
-        </div>
-        <div className="shell footer-bottom">
-          <span>© 2026 Maison Cake Co.</span>
-          <span>Privacy · Terms</span>
-        </div>
+        <p>&copy; 2026 Cake Canada. All rights reserved.</p>
       </footer>
-    </main>
+    </div>
   );
 }

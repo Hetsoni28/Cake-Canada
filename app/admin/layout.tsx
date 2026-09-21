@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   MapPin,
   LogOut,
+  Tag,
 } from "lucide-react";
 
 export default async function AdminLayout({
@@ -65,6 +66,9 @@ export default async function AdminLayout({
           </a>
           <a href="/admin/products" className="admin-nav-link">
             <ShoppingBag size={18} /> Products
+          </a>
+          <a href="/admin/categories" className="admin-nav-link">
+            <Tag size={18} /> Categories
           </a>
           <a href="/admin/customers" className="admin-nav-link">
             <Users size={18} /> Customers
