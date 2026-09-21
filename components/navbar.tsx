@@ -69,10 +69,11 @@ export function Navbar() {
   }, []);
 
   async function handleLogout() {
-    await supabase.auth.signOut();
-    setUser(null);
     setUserMenuOpen(false);
-    window.location.href = "/";
+    // POST to server route so cookies are cleared server-side too
+    await fetch('/auth/logout', { method: 'POST' });
+    setUser(null);
+    window.location.href = '/';
   }
 
   const initials = user?.name
