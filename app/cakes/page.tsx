@@ -1,17 +1,24 @@
-import { getProducts } from "@/lib/products";
-import { getCategories as fetchCategories } from "@/lib/categories";
+import type { Metadata } from "next";
+import { MapPin, Search } from "lucide-react";
+import { Navbar } from "@/components/navbar";
 import { ProductCard } from "@/components/product-card";
+import { getProducts } from "@/lib/products";
+import { getCategories } from "@/lib/categories";
+
+export const metadata: Metadata = {
+  title: "All Cakes | Maison Cake Co.",
+};
 
 export const dynamic = 'force-dynamic';
 
 export default async function CakesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; category?: string; sort?: string; page?: string }>
+  searchParams: Promise<{ q?: string; category?: string; sort?: string; page?: string }>;
 }) {
   const params = await searchParams;
   const page = params.page ? parseInt(params.page, 10) : 1;
-  const result = await getProducts({
+  const { products, total } = await getProducts({
     search: params.q,
     category: params.category,
     sort: params.sort as any,
@@ -19,100 +26,149 @@ export default async function CakesPage({
     limit: 12
   });
 
-  const categories = await fetchCategories();
+  const categories = await getCategories();
 
   return (
-    <div className="catalogue-page">
-      <div className="announcement-bar">Free delivery on orders over $100</div>
-      <nav className="navbar">
-        <a href="/" className="logo">Cake Canada</a>
-        <div className="nav-links">
-          <a href="/cakes">All Cakes</a>
-          <a href="/categories">Categories</a>
-        </div>
-      </nav>
-      
-      <header className="page-hero">
-        <h1>Every cake, a work of art.</h1>
-      </header>
+    <main className="min-h-screen bg-ivory text-espresso">
+      {/* Announcement bar */}
+      <div className="announcement">
+        Freshly baked · Local delivery · Custom cakes available
+      </div>
 
-      <main className="shell">
-        <form className="search-bar" action="/cakes" method="GET">
-          <input type="text" name="q" placeholder="Search cakes..." defaultValue={params.q} />
+      <Navbar />
+
+      {/* Page hero */}
+      <section className="page-hero" style={{ paddingBottom: 24 }}>
+        <p className="eyebrow">OUR COLLECTION</p>
+        <h1>Every cake, a work of art.</h1>
+        <p className="page-hero-subtitle">
+          Browse our full collection of handcrafted cakes — made fresh for
+          birthdays, anniversaries, weddings, and every sweet occasion in
+          between.
+        </p>
+      </section>
+
+      <div className="shell" style={{ marginBottom: 40 }}>
+        <form className="search-bar" action="/cakes" method="GET" style={{ display: 'flex', gap: 12, maxWidth: 500, margin: '0 auto' }}>
+          <input 
+            type="text" 
+            name="q" 
+            placeholder="Search cakes..." 
+            defaultValue={params.q} 
+            style={{ flex: 1, padding: '12px 16px', borderRadius: 8, border: '1px solid var(--border)', fontSize: 16 }}
+          />
           {params.category && <input type="hidden" name="category" value={params.category} />}
           {params.sort && <input type="hidden" name="sort" value={params.sort} />}
-          <button type="submit">Search</button>
+          <button type="submit" className="btn btn-dark" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Search size={18} /> Search
+          </button>
         </form>
+      </div>
 
+      {/* Catalogue */}
+      <div className="shell">
         <div className="catalogue-layout">
+          {/* Sidebar filters */}
           <aside className="catalogue-filters">
-            <h3>Filters</h3>
-            <div className="filter-group">
-              <h4>Categories</h4>
-              <ul className="category-list">
-                <li><a href="/cakes" className={!params.category ? 'active' : ''}>All</a></li>
-                {categories.map(cat => (
-                  <li key={cat.id}>
-                    <a href={`/cakes?category=${cat.slug}${params.sort ? `&sort=${params.sort}` : ''}`} className={params.category === cat.slug ? 'active' : ''}>
-                      {cat.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className="filter-group">
-              <h4>Sort By</h4>
-              <ul className="sort-list">
-                <li><a href={`/cakes?${params.category ? `category=${params.category}&` : ''}sort=newest`}>Newest</a></li>
-                <li><a href={`/cakes?${params.category ? `category=${params.category}&` : ''}sort=price_asc`}>Price: Low to High</a></li>
-                <li><a href={`/cakes?${params.category ? `category=${params.category}&` : ''}sort=price_desc`}>Price: High to Low</a></li>
-                <li><a href={`/cakes?${params.category ? `category=${params.category}&` : ''}sort=name_asc`}>Name: A to Z</a></li>
-              </ul>
-            </div>
+            <h3 style={{ marginBottom: 16, fontSize: 18 }}>Filter by</h3>
+            <ul className="filter-list">
+              <li>
+                <a href="/cakes" className={!params.category ? "active" : ""}>
+                  All Cakes
+                </a>
+              </li>
+              {categories.map((cat) => (
+                <li key={cat.id}>
+                  <a
+                    href={`/cakes?category=${cat.slug}${params.sort ? `&sort=${params.sort}` : ''}`}
+                    className={params.category === cat.slug ? "active" : ""}
+                  >
+                    {cat.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <h3 style={{ marginTop: 32, marginBottom: 16, fontSize: 18 }}>Sort by</h3>
+            <ul className="filter-list">
+              <li>
+                <a href={`/cakes?${new URLSearchParams({ ...params, sort: 'newest' }).toString()}`} className={params.sort === 'newest' || !params.sort ? "active" : ""}>
+                  Newest
+                </a>
+              </li>
+              <li>
+                <a href={`/cakes?${new URLSearchParams({ ...params, sort: 'price_asc' }).toString()}`} className={params.sort === 'price_asc' ? "active" : ""}>
+                  Price: Low to High
+                </a>
+              </li>
+              <li>
+                <a href={`/cakes?${new URLSearchParams({ ...params, sort: 'price_desc' }).toString()}`} className={params.sort === 'price_desc' ? "active" : ""}>
+                  Price: High to Low
+                </a>
+              </li>
+              <li>
+                <a href={`/cakes?${new URLSearchParams({ ...params, sort: 'name_asc' }).toString()}`} className={params.sort === 'name_asc' ? "active" : ""}>
+                  Name: A to Z
+                </a>
+              </li>
+            </ul>
           </aside>
 
-          <div className="catalogue-content">
-            <div className="results-info">
-              Showing {result.products.length} of {result.total} cakes
+          {/* Product grid */}
+          <div style={{ flex: 1 }}>
+            <div style={{ marginBottom: 24, color: 'var(--taupe)', fontSize: 14 }}>
+              Showing {products.length} of {total} cakes
             </div>
-            
-            {result.products.length === 0 ? (
-              <div className="empty-state">No cakes found. Try adjusting your filters.</div>
-            ) : (
-              <>
-                <div className="catalogue-grid">
-                  {result.products.map(product => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
+            <div className="catalogue-grid">
+              {products.length > 0 ? (
+                products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))
+              ) : (
+                <div className="catalogue-empty" style={{ gridColumn: '1 / -1', padding: '60px 0', textAlign: 'center' }}>
+                  <p>No cakes found matching your search. Try adjusting your filters.</p>
+                  <a href="/cakes" className="btn btn-outline" style={{ marginTop: 16 }}>Clear Filters</a>
                 </div>
-                
-                {result.totalPages > 1 && (
-                  <div className="pagination">
-                    {page > 1 && (
-                      <a href={`/cakes?page=${page - 1}${params.category ? `&category=${params.category}` : ''}${params.sort ? `&sort=${params.sort}` : ''}${params.q ? `&q=${params.q}` : ''}`}>Prev</a>
-                    )}
-                    
-                    {Array.from({ length: result.totalPages }).map((_, i) => (
-                      <a key={i} href={`/cakes?page=${i + 1}${params.category ? `&category=${params.category}` : ''}${params.sort ? `&sort=${params.sort}` : ''}${params.q ? `&q=${params.q}` : ''}`} className={page === i + 1 ? 'active' : ''}>
-                        {i + 1}
-                      </a>
-                    ))}
-                    
-                    {page < result.totalPages && (
-                      <a href={`/cakes?page=${page + 1}${params.category ? `&category=${params.category}` : ''}${params.sort ? `&sort=${params.sort}` : ''}${params.q ? `&q=${params.q}` : ''}`}>Next</a>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </main>
+      </div>
 
-      <footer className="footer">
-        <p>&copy; 2026 Cake Canada. All rights reserved.</p>
+      {/* Footer */}
+      <footer className="footer" style={{ marginTop: 80 }}>
+        <div className="shell footer-grid">
+          <div>
+            <div className="brand">
+              MAISON<span>CAKE CO.</span>
+            </div>
+            <p>Handcrafted cakes made for life's sweetest moments.</p>
+          </div>
+          <div>
+            <h4>Shop</h4>
+            <a href="/cakes">All Cakes</a>
+            <a href="/categories/birthday">Birthday</a>
+            <a href="/custom-cake">Custom Cakes</a>
+          </div>
+          <div>
+            <h4>Company</h4>
+            <a href="/about">About Us</a>
+            <a href="/contact">Contact</a>
+            <a href="/faq">FAQs</a>
+          </div>
+          <div>
+            <h4>Contact</h4>
+            <p>
+              <MapPin size={15} /> Canada
+            </p>
+            <p>hello@maisoncakeco.ca</p>
+          </div>
+        </div>
+        <div className="shell footer-bottom">
+          <span>© 2026 Maison Cake Co.</span>
+          <span>Privacy · Terms</span>
+        </div>
       </footer>
-    </div>
+    </main>
   );
 }
