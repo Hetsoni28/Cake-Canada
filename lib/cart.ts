@@ -5,10 +5,18 @@ export interface CartItem {
   variantId: string;
   name: string;
   variantLabel: string; // e.g. "1 kg · Vanilla"
-  price: number;
+  price: number;        // fallback display price
+  serverVerifiedPrice: number; // server-calculated price per item
   quantity: number;
   image: string;
   slug: string;
+  
+  // New configuration fields
+  flavor?: string;
+  eggless?: boolean;
+  frosting?: string;
+  design?: string;
+  addons?: { id: string; name: string; price: number }[];
 }
 
 const STORAGE_KEY = "maison_cart";
@@ -29,7 +37,7 @@ export function saveCart(items: CartItem[]): void {
 }
 
 export function cartTotal(items: CartItem[]): number {
-  return items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  return items.reduce((sum, i) => sum + (i.serverVerifiedPrice || i.price) * i.quantity, 0);
 }
 
 export function cartCount(items: CartItem[]): number {

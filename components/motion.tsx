@@ -42,10 +42,10 @@ export function Reveal({
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
   const dirs = {
-    up:    { y: 36,  x: 0 },
-    left:  { y: 0,   x: -36 },
-    right: { y: 0,   x: 36 },
-    none:  { y: 0,   x: 0 },
+    up: { y: 36, x: 0 },
+    left: { y: 0, x: -36 },
+    right: { y: 0, x: 36 },
+    none: { y: 0, x: 0 },
   };
 
   return (
@@ -103,7 +103,11 @@ export function StaggerItem({
       className={className}
       variants={{
         hidden: { opacity: 0, y: 28 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.72, ease: [0.22, 1, 0.36, 1] } },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.72, ease: [0.22, 1, 0.36, 1] },
+        },
       }}
     >
       {children}

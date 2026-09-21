@@ -11,7 +11,13 @@ import {
   Truck,
 } from "lucide-react";
 import type { Metadata } from "next";
-import { FadeIn, Reveal, ScaleIn, StaggerChildren, StaggerItem } from "@/components/motion";
+import {
+  FadeIn,
+  Reveal,
+  ScaleIn,
+  StaggerChildren,
+  StaggerItem,
+} from "@/components/motion";
 import { Navbar } from "@/components/navbar";
 import { ProductCard } from "@/components/product-card";
 import { getBestSellers, getFeaturedProducts } from "@/lib/products";
@@ -23,12 +29,42 @@ export const metadata: Metadata = {
 };
 
 const OCCASIONS = [
-  { title: "Birthday", slug: "birthday", image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=85" },
-  { title: "Anniversary", slug: "anniversary", image: "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=900&q=85" },
-  { title: "Wedding", slug: "wedding", image: "https://images.unsplash.com/photo-1535254973040-607b474cb50d?auto=format&fit=crop&w=900&q=85" },
-  { title: "Kids", slug: "kids", image: "https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&w=900&q=85" },
-  { title: "Eggless", slug: "eggless", image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=85" },
-  { title: "Designer", slug: "specialty", image: "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?auto=format&fit=crop&w=900&q=85" },
+  {
+    title: "Birthday",
+    slug: "birthday",
+    image:
+      "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=85",
+  },
+  {
+    title: "Anniversary",
+    slug: "anniversary",
+    image:
+      "https://images.unsplash.com/photo-1609357605129-26f69add5d6e?auto=format&fit=crop&w=900&q=85",
+  },
+  {
+    title: "Wedding",
+    slug: "wedding",
+    image:
+      "https://images.unsplash.com/photo-1535254973040-607b474cb50d?auto=format&fit=crop&w=900&q=85",
+  },
+  {
+    title: "Kids",
+    slug: "kids",
+    image:
+      "https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&w=900&q=85",
+  },
+  {
+    title: "Eggless",
+    slug: "eggless",
+    image:
+      "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=85",
+  },
+  {
+    title: "Designer",
+    slug: "specialty",
+    image:
+      "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?auto=format&fit=crop&w=900&q=85",
+  },
 ];
 
 const GALLERY = [
@@ -42,19 +78,22 @@ const GALLERY = [
 
 const REVIEWS = [
   {
-    quote: "The cake looked beautiful and tasted even better. The whole experience was effortless.",
+    quote:
+      "The cake looked beautiful and tasted even better. The whole experience was effortless.",
     name: "Sarah M.",
     city: "Toronto, ON",
     rating: 5,
   },
   {
-    quote: "The attention to detail was incredible. It made our anniversary feel extra special.",
+    quote:
+      "The attention to detail was incredible. It made our anniversary feel extra special.",
     name: "Emily R.",
     city: "Mississauga, ON",
     rating: 5,
   },
   {
-    quote: "Fresh, elegant and exactly what we hoped for. We'll definitely order again.",
+    quote:
+      "Fresh, elegant and exactly what we hoped for. We'll definitely order again.",
     name: "Daniel K.",
     city: "Brampton, ON",
     rating: 5,
@@ -62,10 +101,30 @@ const REVIEWS = [
 ];
 
 const STEPS = [
-  { num: "01", title: "Choose your cake", desc: "Browse our collection and find your favourite.", icon: CakeSlice },
-  { num: "02", title: "Customize your order", desc: "Add your flavour, size, message and extras.", icon: Sparkles },
-  { num: "03", title: "Pick a delivery time", desc: "Choose a date and available delivery slot.", icon: Package },
-  { num: "04", title: "Celebrate", desc: "We bake, pack and deliver with care.", icon: CheckCircle },
+  {
+    num: "01",
+    title: "Choose your cake",
+    desc: "Browse our collection and find your favourite.",
+    icon: CakeSlice,
+  },
+  {
+    num: "02",
+    title: "Customize your order",
+    desc: "Add your flavour, size, message and extras.",
+    icon: Sparkles,
+  },
+  {
+    num: "03",
+    title: "Pick a delivery time",
+    desc: "Choose a date and available delivery slot.",
+    icon: Package,
+  },
+  {
+    num: "04",
+    title: "Celebrate",
+    desc: "We bake, pack and deliver with care.",
+    icon: CheckCircle,
+  },
 ];
 
 export default async function Home() {
@@ -78,7 +137,8 @@ export default async function Home() {
     <main className="homepage">
       {/* ── Announcement bar ─────────────────────────────────────── */}
       <div className="announcement">
-        🎂 Free delivery on orders over $100 · Custom cakes available · Order 5 days ahead
+        🎂 Free delivery on orders over $100 · Custom cakes available · Order 5
+        days ahead
       </div>
 
       <Navbar />
@@ -96,8 +156,8 @@ export default async function Home() {
               <em>remembered.</em>
             </h1>
             <p className="hero-text">
-              Beautiful cakes, thoughtfully crafted with premium ingredients
-              for birthdays, celebrations, and every sweet occasion.
+              Beautiful cakes, thoughtfully crafted with premium ingredients for
+              birthdays, celebrations, and every sweet occasion.
             </p>
             <div className="button-row">
               <a className="btn btn-dark" href="/cakes">
@@ -108,9 +168,15 @@ export default async function Home() {
               </a>
             </div>
             <div className="trust-row">
-              <span><CakeSlice size={15} /> Freshly baked</span>
-              <span><Heart size={15} /> Made with care</span>
-              <span><Truck size={15} /> Local delivery</span>
+              <span>
+                <CakeSlice size={15} /> Freshly baked
+              </span>
+              <span>
+                <Heart size={15} /> Made with care
+              </span>
+              <span>
+                <Truck size={15} /> Local delivery
+              </span>
             </div>
           </FadeIn>
         </div>
@@ -153,7 +219,9 @@ export default async function Home() {
                   </div>
                   <div className="occasion-label">
                     <h3>{item.title}</h3>
-                    <span>Explore <ArrowRight size={13} /></span>
+                    <span>
+                      Explore <ArrowRight size={13} />
+                    </span>
                   </div>
                 </a>
               </StaggerItem>
@@ -277,10 +345,26 @@ export default async function Home() {
           </Reveal>
           <StaggerChildren className="feature-grid">
             {[
-              { Icon: CakeSlice, title: "Freshly Baked", text: "Every order is prepared fresh for your celebration." },
-              { Icon: Sparkles,  title: "Premium Ingredients", text: "Thoughtfully selected ingredients in every recipe." },
-              { Icon: Heart,     title: "Made With Care", text: "Beautiful details, finished by hand with love." },
-              { Icon: Truck,     title: "Reliable Delivery", text: "Carefully packed and delivered on schedule." },
+              {
+                Icon: CakeSlice,
+                title: "Freshly Baked",
+                text: "Every order is prepared fresh for your celebration.",
+              },
+              {
+                Icon: Sparkles,
+                title: "Premium Ingredients",
+                text: "Thoughtfully selected ingredients in every recipe.",
+              },
+              {
+                Icon: Heart,
+                title: "Made With Care",
+                text: "Beautiful details, finished by hand with love.",
+              },
+              {
+                Icon: Truck,
+                title: "Reliable Delivery",
+                text: "Carefully packed and delivered on schedule.",
+              },
             ].map(({ Icon, title, text }) => (
               <StaggerItem key={title}>
                 <div className="feature">
@@ -328,8 +412,8 @@ export default async function Home() {
               <p className="eyebrow">SEASONAL SPECIAL</p>
               <h2>Make their celebration a little sweeter.</h2>
               <p>
-                Discover limited seasonal creations made for the moments
-                you'll remember.
+                Discover limited seasonal creations made for the moments you'll
+                remember.
               </p>
               <a className="btn btn-dark promo-btn" href="/cakes">
                 Shop seasonal cakes <ArrowRight size={17} />
@@ -434,7 +518,9 @@ export default async function Home() {
             </div>
             <p>Handcrafted cakes made for life's sweetest moments.</p>
             <div className="footer-social">
-              <a href="#" aria-label="Instagram"><Instagram size={18} /></a>
+              <a href="#" aria-label="Instagram">
+                <Instagram size={18} />
+              </a>
             </div>
           </div>
           <div>
@@ -452,7 +538,9 @@ export default async function Home() {
           </div>
           <div>
             <h4>Contact</h4>
-            <p><MapPin size={14} /> Greater Toronto Area</p>
+            <p>
+              <MapPin size={14} /> Greater Toronto Area
+            </p>
             <p>hello@maisoncakeco.ca</p>
             <p>+1 (416) 555-0198</p>
           </div>

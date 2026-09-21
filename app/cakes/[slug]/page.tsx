@@ -2,6 +2,7 @@ import { MapPin, ArrowLeft } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { ProductDetailClient } from "@/components/product-detail-client";
 import { getProductBySlug } from "@/lib/products";
+import { getAddons, getOptionPrices } from "@/lib/addons";
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +14,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const [product, addons, optionPrices] = await Promise.all([
+    getProductBySlug(slug),
+    getAddons(),
+    getOptionPrices()
+  ]);
 
   if (!product) {
     return (
@@ -51,7 +56,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </div>
 
       <div className="shell">
-        <ProductDetailClient product={product} />
+        <ProductDetailClient 
+          product={product} 
+          addons={addons} 
+          optionPrices={optionPrices} 
+        />
       </div>
 
       <footer className="footer mt-80">

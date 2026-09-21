@@ -23,6 +23,9 @@ export interface Product {
   base_price: number;
   is_featured: boolean;
   is_best_seller: boolean;
+  is_available?: boolean;
+  is_customizable?: boolean;
+  is_eggless_available?: boolean;
   category_id: string;
   category_slug: string;
   rating: number;
@@ -83,6 +86,9 @@ function mapProduct(row: Record<string, any>): Product {
     base_price:       Number(row.base_price),
     is_featured:      row.is_featured,
     is_best_seller:   row.is_best_seller,
+    is_available:     row.is_available ?? true,
+    is_customizable:  row.is_customizable ?? false,
+    is_eggless_available: row.is_eggless_available ?? false,
     category_id:      row.category_id ?? '',
     category_slug:    (row.categories as { slug: string } | null)?.slug ?? '',
     rating:           0,

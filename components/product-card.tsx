@@ -2,7 +2,7 @@
 
 import { Heart } from "lucide-react";
 import { useCart } from "./cart-provider";
-import type { Product } from "@/lib/data";
+import type { Product } from "@/lib/products";
 
 interface ProductCardProps {
   product: Product;
@@ -23,6 +23,7 @@ export function ProductCard({ product, showBadge = true }: ProductCardProps) {
       name: product.name,
       variantLabel: `${cheapestVariant.weight}${cheapestVariant.flavor ? ` · ${cheapestVariant.flavor}` : ""}`,
       price: cheapestVariant.price,
+      serverVerifiedPrice: cheapestVariant.price,
       image: primaryImage?.image_url ?? "",
       slug: product.slug,
     });
