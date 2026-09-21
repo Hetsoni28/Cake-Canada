@@ -11,9 +11,7 @@ function StarRating({ rating }: { rating: number }) {
       {[1, 2, 3, 4, 5].map((n) => (
         <span
           key={n}
-          style={{
-            color: n <= Math.round(rating) ? "var(--caramel)" : "var(--border)",
-          }}
+          className={n <= Math.round(rating) ? "star-filled" : "star-empty"}
         >
           ★
         </span>
@@ -32,10 +30,10 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  const variant = product.variants[selectedVariantIdx] || { 
-    id: 'unknown', 
-    weight: 'Standard', 
-    price: product.base_price 
+  const variant = product.variants[selectedVariantIdx] ?? {
+    id: "unknown",
+    weight: "Standard",
+    price: product.base_price,
   };
 
   function handleAddToCart() {
@@ -68,29 +66,13 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               <button
                 key={img.id}
                 onClick={() => setSelectedImageIdx(idx)}
+                className={`thumb-btn${selectedImageIdx === idx ? " active" : ""}`}
                 aria-label={`View image ${idx + 1}`}
-                style={{
-                  border:
-                    selectedImageIdx === idx
-                      ? "2px solid var(--espresso)"
-                      : "2px solid var(--border)",
-                  borderRadius: 8,
-                  overflow: "hidden",
-                  cursor: "pointer",
-                  padding: 0,
-                  background: "none",
-                  flexShrink: 0,
-                }}
               >
                 <img
                   src={img.image_url}
                   alt={img.alt_text ?? product.name}
-                  style={{
-                    width: 72,
-                    height: 72,
-                    objectFit: "cover",
-                    display: "block",
-                  }}
+                  className="thumb-btn-img"
                 />
               </button>
             ))}
@@ -101,9 +83,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
       {/* ── Right: Info ── */}
       <div className="product-detail-info">
         <h1 className="product-title">{product.name}</h1>
-        <div className="product-meta">
+        <div className="rating-row">
           <StarRating rating={product.rating || 5} />
-          <a href="#reviews" className="text-link" style={{ fontSize: 13 }}>
+          <a href="#reviews" className="text-link review-link">
             {product.review_count || 12} reviews
           </a>
         </div>
@@ -120,21 +102,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                   onClick={() => setSelectedVariantIdx(idx)}
                   className={`variant-btn${selectedVariantIdx === idx ? " active" : ""}`}
                 >
-                  <span style={{ display: "block", fontWeight: 600 }}>
-                    {v.weight}
-                  </span>
+                  <span className="variant-weight">{v.weight}</span>
                   {v.flavor && (
-                    <span
-                      style={{
-                        display: "block",
-                        fontSize: 12,
-                        color:
-                          selectedVariantIdx === idx ? "#fff" : "var(--taupe)",
-                        marginTop: 2,
-                      }}
-                    >
-                      {v.flavor}
-                    </span>
+                    <span className="variant-flavor">{v.flavor}</span>
                   )}
                 </button>
               ))}
@@ -158,25 +128,23 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               +
             </button>
           </div>
-          <button className="btn btn-dark" style={{ flex: 1 }} onClick={handleAddToCart}>
+          <button
+            className="btn btn-dark add-to-cart-btn-main"
+            onClick={handleAddToCart}
+          >
             Add to Cart — ${(variant.price * quantity).toFixed(2)}
           </button>
           <button
-            className="btn btn-outline"
-            style={{ padding: "0 16px" }}
+            className="btn btn-outline wishlist-btn-icon"
             aria-label="Add to wishlist"
           >
             <Heart size={20} />
           </button>
         </div>
-        
-        <div style={{ marginTop: 24, fontSize: 13, color: "var(--taupe)" }}>
-          <p style={{ margin: "4px 0" }}>
-            ✓ Made fresh to order
-          </p>
-          <p style={{ margin: "4px 0" }}>
-            ✓ Local delivery available
-          </p>
+
+        <div className="product-perks">
+          <p>✓ Made fresh to order</p>
+          <p>✓ Local delivery available</p>
         </div>
       </div>
     </div>

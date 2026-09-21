@@ -2,7 +2,6 @@ import { MapPin, ArrowLeft } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { ProductDetailClient } from "@/components/product-detail-client";
 import { getProductBySlug } from "@/lib/products";
-import { notFound } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
 
@@ -23,11 +22,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           Freshly baked · Local delivery · Custom cakes available
         </div>
         <Navbar />
-        <div className="shell" style={{ padding: "80px 0", textAlign: "center" }}>
+        <div className="shell not-found-wrap">
           <p className="eyebrow">404</p>
-          <h1 style={{ marginBottom: 16 }}>Cake not found</h1>
-          <p style={{ marginBottom: 32, color: "var(--taupe)" }}>
-            We couldn't find the cake you're looking for.
+          <h1 className="not-found-title">Cake not found</h1>
+          <p className="not-found-msg">
+            We couldn&apos;t find the cake you&apos;re looking for.
           </p>
           <a href="/cakes" className="btn btn-dark">
             Back to all cakes
@@ -39,38 +38,23 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <main className="min-h-screen bg-ivory text-espresso">
-      {/* ── Announcement bar ── */}
       <div className="announcement">
         Freshly baked · Local delivery · Custom cakes available
       </div>
 
-      {/* ── Navbar ── */}
       <Navbar />
 
-      {/* ── Back link ── */}
       <div className="shell">
-        <a
-          href="/cakes"
-          className="text-link"
-          style={{
-            display: "inline-flex",
-            gap: 8,
-            alignItems: "center",
-            padding: "20px 0",
-            textDecoration: "none"
-          }}
-        >
+        <a href="/cakes" className="back-link text-link">
           <ArrowLeft size={16} /> Back to all cakes
         </a>
       </div>
 
-      {/* ── Product detail ── */}
       <div className="shell">
         <ProductDetailClient product={product} />
       </div>
 
-      {/* ── Footer ── */}
-      <footer className="footer" style={{ marginTop: 80 }}>
+      <footer className="footer mt-80">
         <div className="shell footer-grid">
           <div>
             <div className="brand">

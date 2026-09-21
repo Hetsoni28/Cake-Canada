@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { MapPin, ArrowLeft } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { ProductCard } from "@/components/product-card";
@@ -11,13 +10,15 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);
-  return { title: category ? `${category.name} Cakes | Maison Cake Co.` : 'Category Not Found' };
+  return {
+    title: category ? `${category.name} Cakes | Maison Cake Co.` : 'Category Not Found',
+  };
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);
-  
+
   if (!category) {
     notFound();
   }
@@ -26,55 +27,37 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
   return (
     <main className="min-h-screen bg-ivory text-espresso">
-      {/* Announcement bar */}
       <div className="announcement">
         Freshly baked · Local delivery · Custom cakes available
       </div>
 
       <Navbar />
 
-      {/* Back link */}
       <div className="shell">
-        <a
-          href="/categories"
-          className="text-link"
-          style={{
-            display: "inline-flex",
-            gap: 8,
-            alignItems: "center",
-            padding: "20px 0",
-            textDecoration: "none"
-          }}
-        >
+        <a href="/categories" className="back-link text-link">
           <ArrowLeft size={16} /> Back to all categories
         </a>
       </div>
 
-      {/* Page hero */}
-      <section className="page-hero" style={{ paddingTop: 20 }}>
+      <section className="page-hero">
         <h1>{category.name}</h1>
-        <p className="page-hero-subtitle">
-          {category.description}
-        </p>
+        <p className="page-hero-subtitle">{category.description}</p>
       </section>
 
-      {/* Catalogue */}
-      <div className="shell" style={{ paddingBottom: 80 }}>
-        {/* We use the catalogue-grid from globals.css without the sidebar layout */}
-        <div className="catalogue-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
+      <div className="shell categories-container">
+        <div className="catalogue-grid">
           {products.length > 0 ? (
             products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))
           ) : (
-            <p className="catalogue-empty" style={{ gridColumn: '1 / -1', padding: '60px 0', textAlign: 'center' }}>
+            <p className="catalogue-empty">
               No cakes found in this category yet.
             </p>
           )}
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="footer">
         <div className="shell footer-grid">
           <div>

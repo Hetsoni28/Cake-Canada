@@ -23,7 +23,7 @@ export default async function CakesPage({
     category: params.category,
     sort: params.sort as any,
     page,
-    limit: 12
+    limit: 12,
   });
 
   const categories = await getCategories();
@@ -38,28 +38,28 @@ export default async function CakesPage({
       <Navbar />
 
       {/* Page hero */}
-      <section className="page-hero" style={{ paddingBottom: 24 }}>
+      <section className="page-hero pb-24">
         <p className="eyebrow">OUR COLLECTION</p>
         <h1>Every cake, a work of art.</h1>
         <p className="page-hero-subtitle">
           Browse our full collection of handcrafted cakes — made fresh for
-          birthdays, anniversaries, weddings, and every sweet occasion in
-          between.
+          birthdays, anniversaries, weddings, and every sweet occasion in between.
         </p>
       </section>
 
-      <div className="shell" style={{ marginBottom: 40 }}>
-        <form className="search-bar" action="/cakes" method="GET" style={{ display: 'flex', gap: 12, maxWidth: 500, margin: '0 auto' }}>
-          <input 
-            type="text" 
-            name="q" 
-            placeholder="Search cakes..." 
-            defaultValue={params.q} 
-            style={{ flex: 1, padding: '12px 16px', borderRadius: 8, border: '1px solid var(--border)', fontSize: 16 }}
+      {/* Search bar */}
+      <div className="shell search-bar-container">
+        <form className="search-bar" action="/cakes" method="GET">
+          <input
+            type="text"
+            name="q"
+            className="search-input"
+            placeholder="Search cakes..."
+            defaultValue={params.q}
           />
           {params.category && <input type="hidden" name="category" value={params.category} />}
           {params.sort && <input type="hidden" name="sort" value={params.sort} />}
-          <button type="submit" className="btn btn-dark" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button type="submit" className="btn btn-dark search-btn">
             <Search size={18} /> Search
           </button>
         </form>
@@ -70,7 +70,7 @@ export default async function CakesPage({
         <div className="catalogue-layout">
           {/* Sidebar filters */}
           <aside className="catalogue-filters">
-            <h3 style={{ marginBottom: 16, fontSize: 18 }}>Filter by</h3>
+            <h3 className="filter-title">Filter by</h3>
             <ul className="filter-list">
               <li>
                 <a href="/cakes" className={!params.category ? "active" : ""}>
@@ -80,7 +80,7 @@ export default async function CakesPage({
               {categories.map((cat) => (
                 <li key={cat.id}>
                   <a
-                    href={`/cakes?category=${cat.slug}${params.sort ? `&sort=${params.sort}` : ''}`}
+                    href={`/cakes?category=${cat.slug}${params.sort ? `&sort=${params.sort}` : ""}`}
                     className={params.category === cat.slug ? "active" : ""}
                   >
                     {cat.name}
@@ -89,45 +89,46 @@ export default async function CakesPage({
               ))}
             </ul>
 
-            <h3 style={{ marginTop: 32, marginBottom: 16, fontSize: 18 }}>Sort by</h3>
+            <h3 className="filter-title mt-32">Sort by</h3>
             <ul className="filter-list">
-              <li>
-                <a href={`/cakes?${new URLSearchParams({ ...params, sort: 'newest' }).toString()}`} className={params.sort === 'newest' || !params.sort ? "active" : ""}>
-                  Newest
-                </a>
-              </li>
-              <li>
-                <a href={`/cakes?${new URLSearchParams({ ...params, sort: 'price_asc' }).toString()}`} className={params.sort === 'price_asc' ? "active" : ""}>
-                  Price: Low to High
-                </a>
-              </li>
-              <li>
-                <a href={`/cakes?${new URLSearchParams({ ...params, sort: 'price_desc' }).toString()}`} className={params.sort === 'price_desc' ? "active" : ""}>
-                  Price: High to Low
-                </a>
-              </li>
-              <li>
-                <a href={`/cakes?${new URLSearchParams({ ...params, sort: 'name_asc' }).toString()}`} className={params.sort === 'name_asc' ? "active" : ""}>
-                  Name: A to Z
-                </a>
-              </li>
+              {[
+                { label: "Newest", value: "newest" },
+                { label: "Price: Low to High", value: "price_asc" },
+                { label: "Price: High to Low", value: "price_desc" },
+                { label: "Name: A to Z", value: "name_asc" },
+              ].map(({ label, value }) => (
+                <li key={value}>
+                  <a
+                    href={`/cakes?${new URLSearchParams({ ...params, sort: value }).toString()}`}
+                    className={
+                      params.sort === value || (!params.sort && value === "newest")
+                        ? "active"
+                        : ""
+                    }
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </aside>
 
           {/* Product grid */}
-          <div style={{ flex: 1 }}>
-            <div style={{ marginBottom: 24, color: 'var(--taupe)', fontSize: 14 }}>
+          <div className="catalogue-main">
+            <p className="catalogue-results-count">
               Showing {products.length} of {total} cakes
-            </div>
+            </p>
             <div className="catalogue-grid">
               {products.length > 0 ? (
                 products.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))
               ) : (
-                <div className="catalogue-empty" style={{ gridColumn: '1 / -1', padding: '60px 0', textAlign: 'center' }}>
+                <div className="catalogue-empty">
                   <p>No cakes found matching your search. Try adjusting your filters.</p>
-                  <a href="/cakes" className="btn btn-outline" style={{ marginTop: 16 }}>Clear Filters</a>
+                  <a href="/cakes" className="btn btn-outline catalogue-empty-btn">
+                    Clear Filters
+                  </a>
                 </div>
               )}
             </div>
@@ -136,7 +137,7 @@ export default async function CakesPage({
       </div>
 
       {/* Footer */}
-      <footer className="footer" style={{ marginTop: 80 }}>
+      <footer className="footer mt-80">
         <div className="shell footer-grid">
           <div>
             <div className="brand">
